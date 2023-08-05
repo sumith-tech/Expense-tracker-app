@@ -1,11 +1,13 @@
-import React, { useRef } from "react";
+import React, { Fragment, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import classes from "./SignUp.module.css";
-import axios from "axios";
+import MainNav from "../Layouts/MainNav";
 const SignUp = (props) => {
   const emailref = useRef();
   const passwordref = useRef();
   const confirmPasswordref = useRef();
 
+  const navigate = useNavigate();
   const onsubmitHandler = (e) => {
     e.preventDefault();
     const entredEmail = emailref.current.value;
@@ -36,6 +38,7 @@ const SignUp = (props) => {
         })
         .then((data) => {
           console.log(data);
+          navigate("/login");
         })
         .catch((err) => {
           alert(err);
@@ -43,37 +46,39 @@ const SignUp = (props) => {
     }
   };
   return (
-    <section className={classes.auth}>
-      <h1>SignUp</h1>
-      <form onSubmit={onsubmitHandler}>
-        <div className={classes.control}>
-          <label htmlFor="email">Email</label>
-          <input type="email" id="email" required ref={emailref}></input>
-        </div>
-        <div className={classes.control}>
-          <label htmlFor="password">Password</label>
-          <input
-            type="password"
-            id="password"
-            required
-            ref={passwordref}
-          ></input>
-        </div>
-        <div className={classes.control}>
-          <label htmlFor="password">Confirm Password</label>
-          <input
-            type="password"
-            id="confirmPassword"
-            required
-            ref={confirmPasswordref}
-          ></input>
-        </div>
-        <div className={classes.actions}>
-          <button className={classes.toggle}>Sign Up!</button>
-        </div>
-      </form>
-      
-    </section>
+    <Fragment>
+      <MainNav />
+      <section className={classes.auth}>
+        <h1>SignUp</h1>
+        <form onSubmit={onsubmitHandler}>
+          <div className={classes.control}>
+            <label htmlFor="email">Email</label>
+            <input type="email" id="email" required ref={emailref}></input>
+          </div>
+          <div className={classes.control}>
+            <label htmlFor="password">Password</label>
+            <input
+              type="password"
+              id="password"
+              required
+              ref={passwordref}
+            ></input>
+          </div>
+          <div className={classes.control}>
+            <label htmlFor="password">Confirm Password</label>
+            <input
+              type="password"
+              id="confirmPassword"
+              required
+              ref={confirmPasswordref}
+            ></input>
+          </div>
+          <div className={classes.actions}>
+            <button className={classes.toggle}>Sign Up!</button>
+          </div>
+        </form>
+      </section>
+    </Fragment>
   );
 };
 export default SignUp;
