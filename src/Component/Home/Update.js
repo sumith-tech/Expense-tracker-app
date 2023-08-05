@@ -9,7 +9,7 @@ const UpdateProfile = () => {
     e.preventDefault();
     const entredName = nameref.current.value;
     const entredImg = imgref.current.value;
-    console.log(authCtx.token)
+    console.log(authCtx.token);
     fetch(
       "https://identitytoolkit.googleapis.com/v1/accounts:update?key=AIzaSyAZ6ICn5fDGs2UVskqPLj81R8K0tShMQWs",
       {
@@ -34,7 +34,31 @@ const UpdateProfile = () => {
       })
       .then((data) => {
         console.log(data);
-       
+      })
+      .catch((err) => {
+        alert(err);
+      });
+
+    fetch(
+      "https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=AIzaSyAZ6ICn5fDGs2UVskqPLj81R8K0tShMQWs",
+      {
+        method: "GET",
+        body: JSON.stringify({
+          idToken: authCtx.token,
+        }),
+        headers: { "content-Type": "application/json" },
+      }
+    )
+      .then((res) => {
+        if (res.ok) {
+          return res.json();
+        } else {
+          let errMessage = "Authentication Failed!";
+          throw new Error(errMessage);
+        }
+      })
+      .then((data) => {
+        console.log(data);
       })
       .catch((err) => {
         alert(err);
