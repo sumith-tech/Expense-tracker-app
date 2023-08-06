@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 const AuthContext = React.createContext({
   token: "",
@@ -9,6 +9,12 @@ export default AuthContext;
 
 export const AuthProvider = (props) => {
   const [token, setToken] = useState("");
+  useEffect(() => {
+    updateToken();
+  }, []);
+  const updateToken = () => {
+    setToken(localStorage.getItem("token"));
+  };
   const saveTokenHandler = (token) => {
     setToken(token);
   };
@@ -20,7 +26,7 @@ export const AuthProvider = (props) => {
   };
   return (
     <AuthContext.Provider value={authcontext}>
-        {console.log()}
+      {console.log()}
       {props.children}
     </AuthContext.Provider>
   );

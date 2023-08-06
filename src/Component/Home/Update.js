@@ -1,10 +1,12 @@
-import React, { Fragment, useContext, useRef } from "react";
+import React, { Fragment, useContext, useEffect, useRef } from "react";
 import { Card, Button } from "react-bootstrap";
 import AuthContext from "../../Store/auth-context";
+import { useNavigate } from "react-router-dom";
 const UpdateProfile = () => {
   const authCtx = useContext(AuthContext);
   const nameref = useRef();
   const imgref = useRef();
+  const navigateHome = useNavigate();
   const onsubmitHandler = (e) => {
     e.preventDefault();
     const entredName = nameref.current.value;
@@ -34,31 +36,7 @@ const UpdateProfile = () => {
       })
       .then((data) => {
         console.log(data);
-      })
-      .catch((err) => {
-        alert(err);
-      });
-
-    fetch(
-      "https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=AIzaSyAZ6ICn5fDGs2UVskqPLj81R8K0tShMQWs",
-      {
-        method: "GET",
-        body: JSON.stringify({
-          idToken: authCtx.token,
-        }),
-        headers: { "content-Type": "application/json" },
-      }
-    )
-      .then((res) => {
-        if (res.ok) {
-          return res.json();
-        } else {
-          let errMessage = "Authentication Failed!";
-          throw new Error(errMessage);
-        }
-      })
-      .then((data) => {
-        console.log(data);
+        navigateHome("/home");
       })
       .catch((err) => {
         alert(err);

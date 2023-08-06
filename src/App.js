@@ -12,7 +12,7 @@ const App = () => {
     <BrowserRouter>
       <Routes>
         {authCtx.islogin && <Route path="/home" element={<Home />} />}
-       
+
         <Route path="/" element={<SignUp />} />
         <Route path="*" element={<Login />} />
         <Route path="/login" element={<Login />} />
