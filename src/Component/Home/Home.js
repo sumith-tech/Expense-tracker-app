@@ -2,10 +2,11 @@ import React, { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import AuthContext from "../../Store/auth-context";
 import { Button } from "react-bootstrap";
-
+import { useNavigate } from "react-router-dom";
 const Home = () => {
   const authCtx = useContext(AuthContext);
   const [name, setname] = useState();
+  const navigateHome = useNavigate();
   useEffect(() => {
     fetch(
       "https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=AIzaSyAZ6ICn5fDGs2UVskqPLj81R8K0tShMQWs",
@@ -61,6 +62,10 @@ const Home = () => {
         alert(err);
       });
   };
+  const logoutHandler = () => {
+    localStorage.removeItem("token");
+    navigateHome("/login");
+  };
 
   return (
     <div>
@@ -72,6 +77,21 @@ const Home = () => {
       )}
       {name && <h3>{name}</h3>}
       <Button onClick={verifyEmailHandler}>Verify Email</Button>
+      <div>
+        <Button
+          variant="danger"
+          onClick={logoutHandler}
+          style={{
+            position: "absolute",
+            top: "0",
+            right: "0",
+            marginTop: "1em",
+            marginRight: "1em",
+          }}
+        >
+          Logout
+        </Button>
+      </div>
     </div>
   );
 };
