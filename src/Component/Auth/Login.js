@@ -1,8 +1,9 @@
 import React, { Fragment, useContext, useRef } from "react";
 import classes from "./SignUp.module.css";
 import MainNav from "../Layouts/MainNav";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import AuthContext from "../../Store/auth-context";
+import { Button } from "react-bootstrap";
 const Login = (props) => {
   const emailref = useRef();
   const passwordref = useRef();
@@ -61,6 +62,9 @@ const Login = (props) => {
               required
               ref={passwordref}
             ></input>
+          </div>
+          <div>
+            <Link to={'/ForgetPassword'} style={{textDecoration:'none'}}>Forget Password</Link>
           </div>
           <div className={classes.actions}>
             <button className={classes.toggle}>Login</button>
