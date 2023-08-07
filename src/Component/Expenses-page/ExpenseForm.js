@@ -1,4 +1,10 @@
-import React, { Fragment, useRef, useState } from "react";
+import React, {
+  Fragment,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { Button, Form, Table } from "react-bootstrap";
 import ExpenseList from "./ExpenseList";
 const ExpenseForm = (props) => {
@@ -6,8 +12,10 @@ const ExpenseForm = (props) => {
   const descriptionRef = useRef();
   const categoryRef = useRef();
   const [expenses, setExpenses] = useState([]);
+  const [editSwitch, setEditSwitch] = useState(false);
+  const [editid, setEditid] = useState("");
 
-  const onsubmitHandler = (e) => {
+  const onsubmitHandler = async (e) => {
     e.preventDefault();
     const entredExpese = expenseRef.current.value;
     const description = descriptionRef.current.value;
@@ -18,44 +26,53 @@ const ExpenseForm = (props) => {
       description: description,
       category: entredCategory,
     };
-
-    fetch(
-      "https://expense-tracker-414ae-default-rtdb.firebaseio.com/expense.json",
-      {
-        method: "POST",
-        body: JSON.stringify(expense),
-      }
-    )
-      .then((res) => {
-        if (res.ok) {
-          return res.json();
-        } else {
-          let errMessage = "Error Saving!";
-          throw new Error(errMessage);
+    if (editSwitch) {
+      try {
+        const response = await fetch(
+          `https://expense-tracker-414ae-default-rtdb.firebaseio.com/expense/${editid}.json`,
+          { method: "PUT", body: JSON.stringify(expense) }
+        );
+        if (!response.ok) {
+          throw new Error("Something Went Wrong");
         }
-      })
-      .then((data) => {
+        const data = await response.json();
         console.log(data);
-      })
-      .catch((err) => {
-        alert(err);
-      });
-  };
-  fetch(
-    "https://expense-tracker-414ae-default-rtdb.firebaseio.com/expense.json",
-    {
-      method: "GET",
-    }
-  )
-    .then((res) => {
-      if (res.ok) {
-        return res.json();
-      } else {
-        let errMessage = "Error Saving!";
-        throw new Error(errMessage);
+        setEditSwitch(false);
+        fetchExpenseData();
+      } catch (err) {
+        alert(err.message);
       }
-    })
-    .then((data) => {
+    } else {
+      try {
+        const response = await fetch(
+          "https://expense-tracker-414ae-default-rtdb.firebaseio.com/expense.json",
+          {
+            method: "POST",
+            body: JSON.stringify(expense),
+          }
+        );
+        if (!response.ok) {
+          throw new Error("Something Went Wrong");
+        }
+        const data = await response.json();
+        fetchExpenseData();
+      } catch (err) {
+        alert(err.message);
+      }
+    }
+  };
+  useEffect(() => {
+    fetchExpenseData();
+  }, []);
+  const fetchExpenseData = useCallback(async () => {
+    try {
+      const response = await fetch(
+        "https://expense-tracker-414ae-default-rtdb.firebaseio.com/expense.json"
+      );
+      if (!response.ok) {
+        throw new Error("Something Went Wrong");
+      }
+      const data = await response.json();
       const loadeddata = [];
       for (const key in data) {
         loadeddata.push({
@@ -66,15 +83,25 @@ const ExpenseForm = (props) => {
         });
       }
       setExpenses(loadeddata);
-    })
-    .catch((err) => {
-      alert(err);
-    });
+    } catch (err) {
+      alert(err.message);
+    }
+  }, []);
+
+  const editExpenseHandler = async (id) => {
+    console.log(id);
+    setEditSwitch(true);
+    setEditid(id);
+  };
   const expenseslist = expenses.map((item) => (
     <ExpenseList
+      key={item.id}
+      id={item.id}
       expense={item.expense}
       category={item.category}
       description={item.description}
+      fatchdata={fetchExpenseData}
+      editExpense={editExpenseHandler}
     />
   ));
 
@@ -84,14 +111,15 @@ const ExpenseForm = (props) => {
         className="mx-auto col-10 col-md-8 col-lg-6"
         style={{ marginTop: "2em" }}
       >
-        <Form>
+        <Form onSubmit={onsubmitHandler}>
           <Form.Group className="mb-3">
-            <Form.Label>Enter Expense</Form.Label>
-            <Form.Control ref={expenseRef} type="number" />
+            {!editSwitch && <Form.Label>Enter Expense</Form.Label>}
+            {editSwitch && <Form.Label>Edit Expense</Form.Label>}
+            <Form.Control ref={expenseRef} type="number" required />
           </Form.Group>
           <Form.Group className="mb-3">
             <Form.Label>Description</Form.Label>
-            <Form.Control ref={descriptionRef} type="text" />
+            <Form.Control ref={descriptionRef} type="text" required />
           </Form.Group>
           <Form.Group className="mb-3">
             <Form.Label>Category</Form.Label>
@@ -106,14 +134,19 @@ const ExpenseForm = (props) => {
             </Form.Select>
           </Form.Group>
           <Form.Group className="mb-3">
-            <Button onClick={onsubmitHandler}>Add Expense</Button>
+            {!editSwitch && <Button type="submit">Add Expense</Button>}
+            {editSwitch && (
+              <Button variant="success" type="submit">
+                Edit Expense
+              </Button>
+            )}
           </Form.Group>
         </Form>
       </div>
       <h2>Expenses</h2>
       <Table striped bordered hover size="sm">
         <thead>
-          <tr>
+          <tr style={{ textAlign: "center" }}>
             <th>Expense Name</th>
             <th>category</th>
             <th>Price</th>
