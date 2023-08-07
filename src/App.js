@@ -6,6 +6,9 @@ import UpdateProfile from "./Component/Home/Update";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import AuthContext from "./Store/auth-context";
 import ForgetPassword from "./Component/Auth/ForgetPassword";
+import WelcomePage from "./Component/WelcomePage/WelcomePage";
+import ExpensePage from "./Component/Expenses-page/ExpensePage";
+
 const App = () => {
   const authCtx = useContext(AuthContext);
 
@@ -14,11 +17,12 @@ const App = () => {
       <Routes>
         {authCtx.islogin && <Route path="/home" element={<Home />} />}
 
-        <Route path="/" element={<SignUp />} />
-        <Route path="*" element={<Login />} />
-        <Route path="/login" element={<Login />} />
+        {!authCtx.islogin && <Route path="/signup" element={<SignUp />} />}
+        {!authCtx.islogin && <Route path="/login" element={<Login />} />}
+        <Route path="/" element={<WelcomePage />} />
         <Route path="/update" element={<UpdateProfile />} />
         <Route path="/ForgetPassword" element={<ForgetPassword />} />
+        <Route path="/expense" element={<ExpensePage />} />
       </Routes>
     </BrowserRouter>
   );

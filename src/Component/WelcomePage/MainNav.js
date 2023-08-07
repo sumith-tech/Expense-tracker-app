@@ -8,11 +8,11 @@ const MainNav = () => {
   const authCtx = useContext(AuthContext);
   return (
     <header>
-      <Navbar bg="dark" data-bs-theme="dark"> 
+      <Navbar bg="dark" data-bs-theme="dark">
         <Container>
           <Navbar.Brand href="/expense">Expense Tracker</Navbar.Brand>
           <Nav className="me-auto">
-            {authCtx.islogin && <Nav.Link href="/home">Profile</Nav.Link>}
+            <Nav.Link href="/home">Profile</Nav.Link>
             {!authCtx.islogin && <Nav.Link href="/login">Login</Nav.Link>}
             {!authCtx.islogin && <Nav.Link href="/signup">Signup</Nav.Link>}
           </Nav>
