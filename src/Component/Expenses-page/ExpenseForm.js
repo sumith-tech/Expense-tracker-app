@@ -18,8 +18,58 @@ const ExpenseForm = (props) => {
       description: description,
       category: entredCategory,
     };
-    setExpenses([...expenses, expense]);
+
+    fetch(
+      "https://expense-tracker-414ae-default-rtdb.firebaseio.com/expense.json",
+      {
+        method: "POST",
+        body: JSON.stringify(expense),
+      }
+    )
+      .then((res) => {
+        if (res.ok) {
+          return res.json();
+        } else {
+          let errMessage = "Error Saving!";
+          throw new Error(errMessage);
+        }
+      })
+      .then((data) => {
+        console.log(data);
+      })
+      .catch((err) => {
+        alert(err);
+      });
   };
+  fetch(
+    "https://expense-tracker-414ae-default-rtdb.firebaseio.com/expense.json",
+    {
+      method: "GET",
+    }
+  )
+    .then((res) => {
+      if (res.ok) {
+        return res.json();
+      } else {
+        let errMessage = "Error Saving!";
+        throw new Error(errMessage);
+      }
+    })
+    .then((data) => {
+      const loadeddata = [];
+      for (const key in data) {
+        loadeddata.push({
+          id: key,
+          expense: data[key].expense,
+          category: data[key].category,
+          description: data[key].description,
+        });
+      }
+      setExpenses(loadeddata);
+    })
+    .catch((err) => {
+      alert(err);
+    });
   const expenseslist = expenses.map((item) => (
     <ExpenseList
       expense={item.expense}

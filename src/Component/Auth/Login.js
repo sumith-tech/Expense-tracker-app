@@ -38,7 +38,7 @@ const Login = (props) => {
         console.log(data.idToken);
         localStorage.setItem("token", data.idToken);
         authCtx.savetoken(data.idToken);
-        navigateHome("/home");
+        navigateHome("/");
       })
       .catch((err) => {
         alert(err);
