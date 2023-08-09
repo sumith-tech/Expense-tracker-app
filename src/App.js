@@ -1,28 +1,33 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import SignUp from "./Component/Auth/SignUp";
 import Home from "./Component/Home/Home";
 import Login from "./Component/Auth/Login";
 import UpdateProfile from "./Component/Home/Update";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import AuthContext from "./Store/auth-context";
 import ForgetPassword from "./Component/Auth/ForgetPassword";
 import WelcomePage from "./Component/WelcomePage/WelcomePage";
 import ExpensePage from "./Component/Expenses-page/ExpensePage";
+import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import { authAction } from "./Store/authSlice";
 
 const App = () => {
-  const authCtx = useContext(AuthContext);
+  const dispatch = useDispatch();
+  const islogin = useSelector((state) => state.auth.isloggedin);
+  useEffect(() => {
+    dispatch(authAction.updateToken());
+  }, []);
 
   return (
     <BrowserRouter>
       <Routes>
-        {authCtx.islogin && <Route path="/home" element={<Home />} />}
-
-        {!authCtx.islogin && <Route path="/signup" element={<SignUp />} />}
-        {!authCtx.islogin && <Route path="/login" element={<Login />} />}
+        {islogin && <Route path="/home" element={<Home />} />}
+        {!islogin && <Route path="/signup" element={<SignUp />} />}
+        {!islogin && <Route path="/login" element={<Login />} />}
         <Route path="/" element={<WelcomePage />} />
         <Route path="/update" element={<UpdateProfile />} />
         <Route path="/ForgetPassword" element={<ForgetPassword />} />
-        <Route path="/expense" element={<ExpensePage />} />
+        {islogin && <Route path="/expense" element={<ExpensePage />} />}
       </Routes>
     </BrowserRouter>
   );

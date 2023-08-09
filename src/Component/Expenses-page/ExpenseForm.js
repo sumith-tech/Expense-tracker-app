@@ -5,9 +5,12 @@ import React, {
   useRef,
   useState,
 } from "react";
+import { useDispatch } from "react-redux";
 import { Button, Form, Table } from "react-bootstrap";
+import { expenseAction } from "../../Store/expenseSlice";
 import ExpenseList from "./ExpenseList";
 const ExpenseForm = (props) => {
+  const usedispatch = useDispatch();
   const expenseRef = useRef();
   const descriptionRef = useRef();
   const categoryRef = useRef();
@@ -83,6 +86,8 @@ const ExpenseForm = (props) => {
         });
       }
       setExpenses(loadeddata);
+
+      usedispatch(expenseAction.addExpense(loadeddata));
     } catch (err) {
       alert(err.message);
     }

@@ -1,14 +1,16 @@
-import React, { Fragment, useContext, useRef } from "react";
+import React, { Fragment, useRef } from "react";
+import { useDispatch } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import { authAction } from "../../Store/authSlice";
 import classes from "./SignUp.module.css";
 import MainNav from "../Layouts/MainNav";
-import { Link, useNavigate } from "react-router-dom";
-import AuthContext from "../../Store/auth-context";
-import { Button } from "react-bootstrap";
+
 const Login = (props) => {
+  const dispatch = useDispatch();
   const emailref = useRef();
   const passwordref = useRef();
   const navigateHome = useNavigate();
-  const authCtx = useContext(AuthContext);
+
   const onsubmitHandler = (e) => {
     e.preventDefault();
     const entredEmail = emailref.current.value;
@@ -37,7 +39,9 @@ const Login = (props) => {
       .then((data) => {
         console.log(data.idToken);
         localStorage.setItem("token", data.idToken);
-        authCtx.savetoken(data.idToken);
+
+        dispatch(authAction.login(data.idToken));
+
         navigateHome("/");
       })
       .catch((err) => {
@@ -64,7 +68,9 @@ const Login = (props) => {
             ></input>
           </div>
           <div>
-            <Link to={'/ForgetPassword'} style={{textDecoration:'none'}}>Forget Password</Link>
+            <Link to={"/ForgetPassword"} style={{ textDecoration: "none" }}>
+              Forget Password
+            </Link>
           </div>
           <div className={classes.actions}>
             <button className={classes.toggle}>Login</button>

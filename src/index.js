@@ -6,13 +6,15 @@ import reportWebVitals from "./reportWebVitals";
 import "../node_modules/react-bootstrap/dist/react-bootstrap";
 import "../node_modules/bootstrap/dist/css/bootstrap.css";
 import { AuthProvider } from "./Store/auth-context";
+import { Provider } from "react-redux";
+import store from "./Store/index";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    <AuthProvider>
+    <Provider store={store}>
       <App />
-    </AuthProvider>
+    </Provider>
   </React.StrictMode>
 );
 

@@ -6,36 +6,30 @@ const ForgetPassword = () => {
   const emailref = useRef();
   const navigateLogin = useNavigate();
 
-  const onsubmitHandler = (e) => {
+  const onsubmitHandler = async (e) => {
     e.preventDefault();
     const entredEmail = emailref.current.value;
-    fetch(
-      "https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key=AIzaSyAZ6ICn5fDGs2UVskqPLj81R8K0tShMQWs",
-      {
-        method: "POST",
-        body: JSON.stringify({
-          requestType: "PASSWORD_RESET",
-          email: entredEmail,
-        }),
-        headers: { "content-Type": "application/json" },
-      }
-    )
-      .then((res) => {
-        if (res.ok) {
-          return res.json();
-        } else {
-          let errMessage = "Authentication Failed!";
-          throw new Error(errMessage);
+    try {
+      const response = await fetch(
+        "https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key=AIzaSyAZ6ICn5fDGs2UVskqPLj81R8K0tShMQWs",
+        {
+          method: "POST",
+          body: JSON.stringify({
+            requestType: "PASSWORD_RESET",
+            email: entredEmail,
+          }),
+          headers: { "content-Type": "application/json" },
         }
-      })
-      .then((data) => {
-        console.log(data);
-        alert("Reset Password Request send to Registered Email");
-        navigateLogin("/login");
-      })
-      .catch((err) => {
-        alert(err);
-      });
+      );
+      if (!response.ok) {
+        throw new Error("Authentication Failed!");
+      }
+      const data = await response.json();
+      navigateLogin("/login");
+      alert("Reset Password Request send to Registered Email");
+    } catch (err) {
+      alert(err.message);
+    }
   };
   return (
     <Fragment>

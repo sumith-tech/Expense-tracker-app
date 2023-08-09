@@ -1,12 +1,14 @@
-import React from "react";
-import MainNav from "./MainNav";
-
+import React, { Fragment } from "react";
+import MainNav from "../Layouts/MainNav";
 
 const WelcomePage = () => {
   return (
-    <div>
+    <Fragment>
       <MainNav />
-    </div>
+      <div>
+        <h2>Welcome to expense Tracker </h2>
+      </div>
+    </Fragment>
   );
 };
 export default WelcomePage;

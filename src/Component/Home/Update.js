@@ -1,46 +1,41 @@
-import React, { Fragment, useContext, useEffect, useRef } from "react";
+import React, { Fragment, useContext, useRef } from "react";
 import { Card, Button } from "react-bootstrap";
-import AuthContext from "../../Store/auth-context";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 const UpdateProfile = () => {
-  const authCtx = useContext(AuthContext);
+  const token = useSelector((state) => state.auth.token);
   const nameref = useRef();
   const imgref = useRef();
   const navigateHome = useNavigate();
-  const onsubmitHandler = (e) => {
+  const onsubmitHandler = async (e) => {
     e.preventDefault();
     const entredName = nameref.current.value;
     const entredImg = imgref.current.value;
-    console.log(authCtx.token);
-    fetch(
-      "https://identitytoolkit.googleapis.com/v1/accounts:update?key=AIzaSyAZ6ICn5fDGs2UVskqPLj81R8K0tShMQWs",
-      {
-        method: "POST",
-        body: JSON.stringify({
-          idToken: authCtx.token,
-          displayName: entredName,
-          photoUrl: entredImg,
-          deleteAttribute: null,
-          returnSecureToken: true,
-        }),
-        headers: { "content-Type": "application/json" },
-      }
-    )
-      .then((res) => {
-        if (res.ok) {
-          return res.json();
-        } else {
-          let errMessage = "Authentication Failed!";
-          throw new Error(errMessage);
+    console.log(token);
+    try {
+      const response = await fetch(
+        "https://identitytoolkit.googleapis.com/v1/accounts:update?key=AIzaSyAZ6ICn5fDGs2UVskqPLj81R8K0tShMQWs",
+        {
+          method: "POST",
+          body: JSON.stringify({
+            idToken: token,
+            displayName: entredName,
+            photoUrl: entredImg,
+            deleteAttribute: null,
+            returnSecureToken: true,
+          }),
+          headers: { "content-Type": "application/json" },
         }
-      })
-      .then((data) => {
-        console.log(data);
-        navigateHome("/home");
-      })
-      .catch((err) => {
-        alert(err);
-      });
+      );
+      if (!response.ok) {
+        throw new Error("Something Went Wrong");
+      }
+
+      const data = await response.json();
+      navigateHome("/home");
+    } catch (err) {
+      alert(err.message);
+    }
   };
 
   return (
