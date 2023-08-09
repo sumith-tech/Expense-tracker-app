@@ -1,6 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const initialExpenseState = { expense: [], premium: true };
+const initialExpenseState = {
+  expense: [],
+  premium: true,
+  showtoggle: false,
+};
 const expenseSlice = createSlice({
   name: "expense",
   initialState: initialExpenseState,
@@ -10,6 +14,14 @@ const expenseSlice = createSlice({
     },
     setpremium(state) {
       state.premium = false;
+    },
+
+    hidepremium(state) {
+      state.premium = true;
+    },
+
+    settoggle(state) {
+      state.showtoggle = true;
     },
   },
 });

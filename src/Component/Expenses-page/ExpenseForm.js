@@ -155,6 +155,8 @@ const ExpenseForm = (props) => {
             <th>Expense Name</th>
             <th>category</th>
             <th>Price</th>
+            <th></th>
+            <th></th>
           </tr>
         </thead>
         <tbody>{expenseslist}</tbody>
