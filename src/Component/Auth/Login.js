@@ -2,7 +2,7 @@ import React, { Fragment, useRef } from "react";
 import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { authAction } from "../../Store/authSlice";
-import classes from "./SignUp.module.css";
+import classes from "./Login.module.css";
 import MainNav from "../Layouts/MainNav";
 
 const Login = (props) => {

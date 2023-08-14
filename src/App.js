@@ -10,6 +10,7 @@ import ExpensePage from "./Component/Expenses-page/ExpensePage";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { authAction } from "./Store/authSlice";
+import './App.css';
 
 const App = () => {
   const dispatch = useDispatch();
@@ -19,17 +20,19 @@ const App = () => {
   }, []);
 
   return (
-    <BrowserRouter>
-      <Routes>
-        {islogin && <Route path="/home" element={<Home />} />}
-        {!islogin && <Route path="/signup" element={<SignUp />} />}
-        {!islogin && <Route path="/login" element={<Login />} />}
-        <Route path="/" element={<WelcomePage />} />
-        <Route path="/update" element={<UpdateProfile />} />
-        <Route path="/ForgetPassword" element={<ForgetPassword />} />
-        {islogin && <Route path="/expense" element={<ExpensePage />} />}
-      </Routes>
-    </BrowserRouter>
+    <div className="App">
+      <BrowserRouter>
+        <Routes>
+          {islogin && <Route path="/home" element={<Home />} />}
+          {!islogin && <Route path="/signup" element={<SignUp />} />}
+          {!islogin && <Route path="/login" element={<Login />} />}
+          <Route path="/" element={<WelcomePage />} />
+          <Route path="/update" element={<UpdateProfile />} />
+          <Route path="/ForgetPassword" element={<ForgetPassword />} />
+          {islogin && <Route path="/expense" element={<ExpensePage />} />}
+        </Routes>
+      </BrowserRouter>
+    </div>
   );
 };
 
